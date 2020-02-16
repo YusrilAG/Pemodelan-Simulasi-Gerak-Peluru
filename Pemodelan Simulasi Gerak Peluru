@@ -1,0 +1,88 @@
+import matplotlib.pyplot as plt
+import numpy
+import math
+
+arrayOfXNumerik = []
+arrayOfYNumerik = []
+arrayOfNumerik = []
+
+arrayOfXAnalitik = []
+arrayOfYAnalitik = []
+arrayOfAnalitik = []
+
+
+kecepatan = float(input('Masukkan Kecepatan : '))
+derajat = float(input('Masukkan Sudut Kemiringan : '))
+perubahanWaktu = float(input('Masukkan Time Delta : '))
+
+print('\n')
+
+Sin = round(math.sin(math.radians(derajat)),2)
+Cos = math.cos(math.radians(derajat))
+
+
+
+g = 9.8
+waktu = float((2 * kecepatan * Sin) / g)
+
+atas = float(math.pow(kecepatan,2) * math.pow(Sin,2))
+bawah = float(2*g)
+
+hMax = float(atas/bawah)
+
+R = kecepatan * Cos * waktu
+
+g = g * -1
+
+positionXNumerik = 0
+positionYNumerik = 0
+
+positionXAnalitik = 0
+positionYAnalitik = 0
+
+kecepatanNumerikX = float(kecepatan * Cos)
+kecepatanNumerikY = float(kecepatan * Sin)
+
+kecepatanAnalitikX = float(kecepatan * Cos)
+kecepatanAnalitikY = float(kecepatan * Sin)
+
+arrayOfXNumerik.append(positionXNumerik)
+arrayOfYNumerik.append(positionYNumerik)
+
+arrayOfXAnalitik.append(positionXAnalitik)
+arrayOfYAnalitik.append(positionYAnalitik)
+
+for t in numpy.arange(0,waktu+perubahanWaktu,perubahanWaktu):
+    kecepatanNumerikY = kecepatanNumerikY + (g * perubahanWaktu)
+    positionXNumerik = positionXNumerik + (kecepatanNumerikX * perubahanWaktu)
+    positionYNumerik = positionYNumerik + (kecepatanNumerikY * perubahanWaktu)
+    arrayOfXNumerik.append(positionXNumerik)
+    arrayOfYNumerik.append(positionYNumerik)
+    if positionYNumerik < 0:
+        print('Waktu Numerik ketika ditanah tanah : ',t)
+        break
+
+
+for t in numpy.arange(0,waktu+perubahanWaktu,perubahanWaktu):
+    
+     positionXAnalitik = kecepatanAnalitikX * t
+     arrayOfXAnalitik.append(positionXAnalitik)
+     positionYAnalitik = kecepatanAnalitikY * t + (0.5 * g * math.pow(t,2))
+     arrayOfYAnalitik.append(positionYAnalitik)
+     if positionYAnalitik < 0:
+        print('Waktu Analitik ketika ditanah tanah : ',t)
+        print('\n')
+        break
+      
+    
+print('Waktu Total : ',waktu)
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.plot(arrayOfXAnalitik,arrayOfYAnalitik,'r-o')
+plt.plot(arrayOfXNumerik,arrayOfYNumerik,'b')
+plt.legend(['Analitik','Numerik'],loc = 'best')
+plt.xlim(0,R+2)
+plt.ylim(0,hMax+0.5)
+print ('Jarak Maksimum : ',R)
+print ('Tinggi Maksimum : ',hMax)
+plt.show()
